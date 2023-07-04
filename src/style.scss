@@ -1,0 +1,200 @@
+html{
+  box-sizing: border-box;
+}
+*,*::after,*::before{
+  box-sizing: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+body{
+  background-color: #030F33;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: auto;
+  }
+
+$list: 5,4,3,2,1,2,3,4,5;
+$size: 1,2,3,4,5,4,3,2,1;
+
+@function list-remove($list, $index) {
+  $newList: ();
+  @for $i from 1 through length($list) {
+    @if $i != $index {
+      $newList: append($newList, nth($list,$i), comma);
+    }
+  }
+  @return $newList;
+}
+@function cal_box_shadow($i){
+  $x:null;
+  @for $j from 1 to $i{
+      $x: append($x, 0px 0px 0px nth($size,$j)*20px rgba(255, 255, 255, nth($list,$j)*0.02), comma);
+      @if $j>5{
+        $x: list-remove($x,10-$j+1)
+      }
+  }
+  @return $x;
+}
+
+@-webkit-keyframes shine{
+  @for $i from 1 to 10{
+    $frame: (10*($i)) * 1%;
+    #{$frame}{
+      box-shadow: cal_box_shadow($i);
+      z-index: -1000;
+    }
+  }
+}
+
+@-webkit-keyframes cloud_move_left {
+  0%{
+    transform: translateX(0) translateY(0);
+  }
+  50%{
+    transform: translateY(-10px) translateX(-10px);
+  }
+  100%{
+    transform: translateX(0) translateY(0);
+  }
+}
+
+@-webkit-keyframes cloud_move_right {
+  0%{
+    transform: translateX(0) translateY(0);
+  }
+  50%{
+    transform: translateY(10px) translateX(10px);
+  }
+  100%{
+    transform: translateX(0) translateY(0);
+  }
+}
+#stars{
+  //background-color: black;
+}
+
+@mixin cloud {
+  width: 350px;
+  height: 120px;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(11%, #022f5c), to(#013669));
+  background: -webkit-linear-gradient(top, #022f5c 11%, #013669 100%);
+  background: -o-linear-gradient(top, #022f5c 11%, #013669 100%);
+  background: linear-gradient(top, #022f5c 11%, #013669 100%);
+  box-shadow: 0 37px 64px -40px #000;
+  border-radius: 100px;
+  position: absolute;
+  margin: 120px auto 20px;
+
+  &:after, &:before {
+    content: '';
+    position: absolute;
+    background: #022F5C;
+    z-index: -11;
+    box-shadow: 0px -5px 136px -40px #000;
+  }
+  &:after {
+    width: 100px;
+    height: 100px;
+    top: -50px;
+    left: 50px;
+    border-radius: 100px;
+  }
+  &:before {
+    width: 180px;
+    height: 180px;
+    top: -90px;
+    right: 50px;
+    border-radius: 200px;
+  }
+}
+
+.clouds{
+  position: relative;
+  top: -210px;
+  left: -210px;
+  bottom: 0px;
+  @for $y from 1 to 20{
+    & .cloud_#{$y}{
+      @include cloud;
+      top:50px;
+      left: random(120)+$y*0.1vmax;
+      transition: all 0.2s ease-in-out;
+      @if $y%2 ==0 {
+        animation: cloud_move_right 10.0s 1s infinite;
+      }@else{
+        animation: cloud_move_left 10.0s 1s infinite;
+      }
+
+    }
+  }
+}
+
+.artwork {
+  position: relative;
+  top: -453px;
+  min-width: 529px;
+  & .moon-glow {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin: 118px auto;
+    background-color: white;
+    border-radius: 50%;
+    top: -53px;
+    box-shadow: 0 0 64px 0 rgba(255, 255, 255, 0.41);
+  }
+  & .moon {
+    width: 400px;
+    height: 400px;
+    margin: 118px auto;
+    background-color: white;
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    top: -570px;
+    animation: shine 16.0s 1s infinite;
+  }
+  & .land {
+    border-radius: 46%;
+    position: relative;
+    width: 666px;
+    height: 239px;
+    background-color: #030f33;
+    top: -1022px;
+    margin: 20px auto;
+    &:before {
+      //content: '';
+      //height: 100px;
+      //width: 370px;
+      //background: rgba(88, 88, 6, 0);
+      //position: absolute;
+      //border-radius: 50%;
+      //z-index: -100;
+      //top: -11px;
+      //left: 152px;
+      //box-shadow: 0px -37px 38px 5px #ffffff;
+    }
+    &:after {
+      content: '';
+      height: 183px;
+      width: 855px;
+      background: #030f33;
+      position: absolute;
+      top: 61px;
+      margin: 0 auto;
+      border-radius: 1000px 1000px 0px 0px;
+      left: -92px;
+    }
+  }
+  & .elk {
+    position: relative;
+    top: -970px;
+    left: -3px;
+    width: 171px;
+    margin: 10px auto;
+    height: 209px;
+    background: url(http://res.cloudinary.com/imshubhamsingh/image/upload/v1506311817/elk_ntzxuz.png) no-repeat;
+    background-size: 190px;
+  }
+}
